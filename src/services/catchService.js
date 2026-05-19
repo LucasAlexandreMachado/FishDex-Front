@@ -20,7 +20,7 @@ export const catchService = {
 
   updateCatch: async (id, data) => {
     const { catchDate, ...payload } = data
-    const response = await axios.put(`/catches/${id}`, payload)
+    const response = await axios.put(`/catches/${id}`, { ...payload, id })
     return response.data
   },
 

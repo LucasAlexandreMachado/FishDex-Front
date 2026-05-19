@@ -3,16 +3,20 @@ import { Modal } from '../ui/Modal'
 import { speciesService } from '../../services/speciesService'
 
 export const CatchFormModal = ({ isOpen, onClose, onSubmit, initialData, isLoading }) => {
-  const [formData, setFormData] = useState(
-    initialData || { location: '', speciesId: '' }
-  )
+  const initialFormData = {
+    location: initialData?.location ?? '',
+    speciesId: initialData?.speciesId ?? initialData?.species?.id ?? ''
+  }
+
+  const [formData, setFormData] = useState(initialFormData)
   const [species, setSpecies] = useState([])
 
   useEffect(() => {
     if (isOpen) {
+      setFormData(initialFormData)
       fetchSpecies()
     }
-  }, [isOpen])
+  }, [isOpen, initialData])
 
   const fetchSpecies = async () => {
     try {

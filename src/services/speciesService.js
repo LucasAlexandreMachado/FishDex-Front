@@ -17,7 +17,7 @@ export const speciesService = {
   },
 
   updateSpecies: async (id, data) => {
-    const response = await axios.put(`/species/${id}`, data)
+    const response = await axios.put(`/species/${id}`, { ...data, id })
     return response.data
   },
 

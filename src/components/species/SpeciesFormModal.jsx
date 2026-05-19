@@ -1,10 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal } from '../ui/Modal'
 
 export const SpeciesFormModal = ({ isOpen, onClose, onSubmit, initialData, isLoading }) => {
-  const [formData, setFormData] = useState(
-    initialData || { commonName: '', scientificName: '' }
-  )
+  const initialFormData = {
+    commonName: initialData?.commonName ?? '',
+    scientificName: initialData?.scientificName ?? ''
+  }
+
+  const [formData, setFormData] = useState(initialFormData)
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(initialFormData)
+    }
+  }, [isOpen, initialData])
 
   const handleChange = (e) => {
     const { name, value } = e.target
