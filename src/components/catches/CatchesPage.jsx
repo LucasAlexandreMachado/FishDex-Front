@@ -146,7 +146,7 @@ export const CatchesPage = () => {
       <ConfirmDialog
         isOpen={!!deleteConfirm}
         title="Deletar Captura"
-        message={`Tem certeza que deseja deletar a captura em "${deleteConfirm?.location}"? Os detalhes associados também serão removidos. Esta ação não pode ser desfeita.`}
+        message={`Tem certeza que deseja deletar a captura em "${deleteConfirm?.location?.name}"? Os detalhes associados também serão removidos. Esta ação não pode ser desfeita.`}
         confirmText="Deletar"
         cancelText="Cancelar"
         isDangerous={true}

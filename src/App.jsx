@@ -1,23 +1,27 @@
 import React, { useState } from 'react'
 import { Sidebar } from './components/layout/Sidebar'
+import { HomePage } from './components/home/HomePage'
 import { SpeciesPage } from './components/species/SpeciesPage'
 import { CatchesPage } from './components/catches/CatchesPage'
+import { LocationsPage } from './components/locations/LocationsPage'
 import { ToastProvider } from './contexts/ToastContext'
 import { ToastContainer } from './components/ui/Toast'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('species')
+  const [currentPage, setCurrentPage] = useState('home')
 
   const renderPage = () => {
     switch (currentPage) {
+      case 'home':
+        return <HomePage />
       case 'species':
         return <SpeciesPage />
       case 'catches':
         return <CatchesPage />
       case 'locations':
-        return <div className="p-8 text-center text-gray-500">Página em desenvolvimento</div>
+        return <LocationsPage />
       default:
-        return <SpeciesPage />
+        return <HomePage />
     }
   }
 

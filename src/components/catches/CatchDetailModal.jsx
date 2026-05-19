@@ -13,7 +13,6 @@ export const CatchDetailModal = ({ isOpen, onClose, catch: catchData, onDetailSa
     weatherCondition: ''
   })
   const [isLoadingDetail, setIsLoadingDetail] = useState(false)
-  const [isCreating, setIsCreating] = useState(false)
   const toast = useToast()
 
   useEffect(() => {
@@ -156,6 +155,23 @@ export const CatchDetailModal = ({ isOpen, onClose, catch: catchData, onDetailSa
       }
     >
       <div className="space-y-4">
+        <div className="grid gap-3 sm:grid-cols-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-slate-500">Localização</p>
+            <p className="mt-1 text-sm font-medium text-slate-900">{catchData?.location || 'Não informada'}</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-wide text-slate-500">Espécie</p>
+            <p className="mt-1 text-sm font-medium text-slate-900">{catchData?.species?.commonName || 'Não informada'}</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-wide text-slate-500">Data da captura</p>
+            <p className="mt-1 text-sm font-medium text-slate-900">
+              {catchData?.catchDate ? new Date(catchData.catchDate).toLocaleDateString('pt-BR') : 'Não informada'}
+            </p>
+          </div>
+        </div>
+
         {!hasDetails && (
           <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex gap-3">
             <AlertCircle size={20} className="text-yellow-600 flex-shrink-0" />

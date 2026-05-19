@@ -18,7 +18,7 @@ export const CatchTable = ({ catches, onEdit, onDelete, onDetail, isLoading }) =
           {catches.map(c => (
             <tr key={c.id} className="hover:bg-gray-50 transition">
               <td className="px-6 py-4 text-sm text-gray-900">{c.species?.commonName || '—'}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{c.location}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{c.location?.name || '—'}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{formatDate(c.catchDate)}</td>
               <td className="px-6 py-4 text-right">
                 <div className="flex justify-end gap-2">

@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Fish, MapPin, Anchor, Menu, X } from 'lucide-react'
+import { Fish, MapPin, Anchor, Menu, X, Home } from 'lucide-react'
 
 export const Sidebar = ({ currentPage, onPageChange }) => {
   const [isOpen, setIsOpen] = useState(true)
 
   const menuItems = [
+    { id: 'home', label: 'Meu Aquário', icon: Home },
     { id: 'species', label: 'Espécies', icon: Fish },
     { id: 'catches', label: 'Capturas', icon: Anchor },
     { id: 'locations', label: 'Localizações', icon: MapPin }

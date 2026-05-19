@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { Modal } from '../ui/Modal'
 import { speciesService } from '../../services/speciesService'
+import { locationService } from '../../services/locationService'
 
 export const CatchFormModal = ({ isOpen, onClose, onSubmit, initialData, isLoading }) => {
   const initialFormData = {
-    location: initialData?.location ?? '',
+    locationId: initialData?.locationId ?? initialData?.location?.id ?? '',
     speciesId: initialData?.speciesId ?? initialData?.species?.id ?? ''
   }
 
   const [formData, setFormData] = useState(initialFormData)
   const [species, setSpecies] = useState([])
+  const [locations, setLocations] = useState([])
 
   useEffect(() => {
     if (isOpen) {
       setFormData(initialFormData)
       fetchSpecies()
+      fetchLocations()
     }
   }, [isOpen, initialData])
 
@@ -27,11 +30,20 @@ export const CatchFormModal = ({ isOpen, onClose, onSubmit, initialData, isLoadi
     }
   }
 
+  const fetchLocations = async () => {
+    try {
+      const data = await locationService.getLocations()
+      setLocations(data)
+    } catch (error) {
+      console.error('Erro ao carregar localizações:', error)
+    }
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'speciesId' ? parseInt(value) : value
+      [name]: name === 'speciesId' || name === 'locationId' ? parseInt(value) : value
     }))
   }
 
@@ -92,15 +104,23 @@ export const CatchFormModal = ({ isOpen, onClose, onSubmit, initialData, isLoadi
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Localização *
           </label>
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
+          <select
+            name="locationId"
+            value={formData.locationId}
             onChange={handleChange}
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Ex: Lago Superior, Rio Amazonas"
-          />
+          >
+            <option value="">Selecione uma localização</option>
+            {locations.map(l => (
+              <option key={l.id} value={l.id}>
+                {l.name}
+              </option>
+            ))}
+          </select>
+          <p className="mt-2 text-sm text-gray-500">
+            Crie novas localizações na página de Localizações.
+          </p>
         </div>
       </form>
     </Modal>
