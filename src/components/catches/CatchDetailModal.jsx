@@ -114,12 +114,16 @@ export const CatchDetailModal = ({ isOpen, onClose, catch: catchData, onDetailSa
   }
 
   const hasDetails = !!detailData
+  const locationLabel = typeof catchData?.location === 'string'
+    ? catchData.location
+    : catchData?.location?.name || 'Não informada'
+  const speciesLabel = catchData?.species?.commonName || 'Não informada'
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Detalhes da Captura - ${catchData?.species?.commonName || 'Desconhecida'}`}
+      title={`Detalhes da Captura - ${speciesLabel}`}
       size="md"
       footer={
         <>
@@ -158,11 +162,11 @@ export const CatchDetailModal = ({ isOpen, onClose, catch: catchData, onDetailSa
         <div className="grid gap-3 sm:grid-cols-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
           <div>
             <p className="text-xs uppercase tracking-wide text-slate-500">Localização</p>
-            <p className="mt-1 text-sm font-medium text-slate-900">{catchData?.location || 'Não informada'}</p>
+            <p className="mt-1 text-sm font-medium text-slate-900">{locationLabel}</p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-wide text-slate-500">Espécie</p>
-            <p className="mt-1 text-sm font-medium text-slate-900">{catchData?.species?.commonName || 'Não informada'}</p>
+            <p className="mt-1 text-sm font-medium text-slate-900">{speciesLabel}</p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-wide text-slate-500">Data da captura</p>

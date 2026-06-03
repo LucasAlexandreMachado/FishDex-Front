@@ -4,9 +4,11 @@ export const ToastContext = createContext()
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([])
+  const [toastCounter, setToastCounter] = React.useState(0)
 
   const addToast = useCallback((message, type = 'info', duration = 3000) => {
-    const id = Date.now()
+    const id = `${Date.now()}-${toastCounter}`
+    setToastCounter(prev => prev + 1)
     const toast = { id, message, type }
     
     setToasts(prev => [...prev, toast])

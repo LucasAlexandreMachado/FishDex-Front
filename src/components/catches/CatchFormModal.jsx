@@ -1,21 +1,32 @@
+
 import React, { useState, useEffect } from 'react'
 import { Modal } from '../ui/Modal'
 import { speciesService } from '../../services/speciesService'
 import { locationService } from '../../services/locationService'
+import { uploadService } from '../../services/uploadService'
 
 export const CatchFormModal = ({ isOpen, onClose, onSubmit, initialData, isLoading }) => {
+
   const initialFormData = {
     locationId: initialData?.locationId ?? initialData?.location?.id ?? '',
-    speciesId: initialData?.speciesId ?? initialData?.species?.id ?? ''
+    speciesId: initialData?.speciesId ?? initialData?.species?.id ?? '',
+    imageUrl: initialData?.imageUrl ?? ''
   }
+
 
   const [formData, setFormData] = useState(initialFormData)
   const [species, setSpecies] = useState([])
   const [locations, setLocations] = useState([])
+  const [imageFile, setImageFile] = useState(null)
+  const [imagePreview, setImagePreview] = useState(initialFormData.imageUrl || '')
+  const [isUploading, setIsUploading] = useState(false)
+
 
   useEffect(() => {
     if (isOpen) {
       setFormData(initialFormData)
+      setImagePreview(initialFormData.imageUrl || '')
+      setImageFile(null)
       fetchSpecies()
       fetchLocations()
     }
@@ -39,17 +50,44 @@ export const CatchFormModal = ({ isOpen, onClose, onSubmit, initialData, isLoadi
     }
   }
 
+
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'speciesId' || name === 'locationId' ? parseInt(value) : value
-    }))
+    const { name, value, files } = e.target
+    if (name === 'image') {
+      const file = files[0]
+      setImageFile(file)
+      if (file) {
+        const reader = new FileReader()
+        reader.onloadend = () => setImagePreview(reader.result)
+        reader.readAsDataURL(file)
+      } else {
+        setImagePreview('')
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: name === 'speciesId' || name === 'locationId' ? parseInt(value) : value
+      }))
+    }
   }
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onSubmit(formData)
+    let imageUrl = formData.imageUrl
+    if (imageFile) {
+      setIsUploading(true)
+      try {
+        const { url } = await uploadService.uploadFile(imageFile)
+        imageUrl = url
+      } catch (err) {
+        alert('Erro ao enviar imagem')
+        setIsUploading(false)
+        return
+      }
+      setIsUploading(false)
+    }
+    onSubmit({ ...formData, imageUrl })
   }
 
   return (
@@ -80,6 +118,25 @@ export const CatchFormModal = ({ isOpen, onClose, onSubmit, initialData, isLoadi
       }
     >
       <form id="catch-form" onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Imagem do Peixe</label>
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleChange}
+                    disabled={isUploading || isLoading}
+                    className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  {imagePreview && (
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="mt-2 rounded-lg border border-gray-200 max-h-40 object-contain"
+                      style={{ maxWidth: '100%' }}
+                    />
+                  )}
+                </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Espécie *
